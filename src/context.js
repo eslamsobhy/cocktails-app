@@ -11,6 +11,7 @@ const AppProvider = ({ children }) => {
 
   // fetching data
   const fetchDrinks = async () => {
+    setLoading(true);
     const response = await fetch(`${url}${searchTerm}`);
     const data = await response.json();
     const { drinks } = data;
@@ -40,10 +41,10 @@ const AppProvider = ({ children }) => {
 
   useEffect(() => {
     fetchDrinks();
-  }, []);
+  }, [searchTerm]);
 
   return (
-    <AppContext.Provider value={{ loading, cocktails }}>
+    <AppContext.Provider value={{ loading, cocktails, setSearchTerm }}>
       {children}
     </AppContext.Provider>
   );
