@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 import { useCallback } from "react";
 
 const url = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=";
@@ -9,8 +9,9 @@ const AppProvider = ({ children }) => {
   const [cocktails, setCocktails] = useState([]);
   const [searchTerm, setSearchTerm] = useState("a");
 
+  // when using the useCallback hook, the function will only recreated when the [searchTerm] changes!
   // fetching data
-  const fetchDrinks = async () => {
+  const fetchDrinks = useCallback(async () => {
     setLoading(true);
     const response = await fetch(`${url}${searchTerm}`);
     const data = await response.json();
@@ -37,11 +38,11 @@ const AppProvider = ({ children }) => {
       console.log(error);
       setLoading(false);
     }
-  };
+  }, [searchTerm]);
 
   useEffect(() => {
     fetchDrinks();
-  }, [searchTerm]);
+  }, [searchTerm, fetchDrinks]);
 
   return (
     <AppContext.Provider value={{ loading, cocktails, setSearchTerm }}>
